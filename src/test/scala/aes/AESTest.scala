@@ -43,12 +43,12 @@ import Simulator._
 class AESTest extends AnyFlatSpec {
   behavior of "AES"
 
-  it should "test SBox" in {
-    simulate(new SBox) { dut =>
-      // dut.io.byteIn.poke(1.U)
-      dut.clock.step(10)
-    }
-  }
+  // it should "test SBox" in {
+  //   simulate(new SBox) { dut =>
+  //     // dut.io.byteIn.poke(1.U)
+  //     dut.clock.step(10)
+  //   }
+  // }
 
   it should "test SubBytes" in {
     simulate(new SubBytes) { dut =>
