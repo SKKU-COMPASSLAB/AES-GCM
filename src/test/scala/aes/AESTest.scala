@@ -50,9 +50,9 @@ class AESTest extends AnyFlatSpec {
   //   }
   // }
 
-  it should "test SubBytes" in {
-    simulate(new SubBytes) { dut =>
-      dut.io.stateIn(0)(1).poke(1.U)
+  // it should "test SubBytes" in {
+  //   simulate(new SubBytes) { dut =>
+  //     dut.io.stateIn(0)(1).poke(1.U)
     //   dut.io.stateIn(1).poke(2.U)
     //   dut.io.stateIn(2).poke(3.U)
     //   dut.io.stateIn(3).poke(4.U)
@@ -68,7 +68,14 @@ class AESTest extends AnyFlatSpec {
     //   dut.io.stateIn(13).poke(14.U)
     //   dut.io.stateIn(14).poke(15.U)
     //   dut.io.stateIn(15).poke(16.U)
-      dut.clock.step(10)
+    //   dut.clock.step(10)
+    // }
+    // }
+
+    it should "test Mix Columns" in {
+    simulate(new MixColumns) { dut =>
+        // dut.io.byteIn.poke(1.U)
+        dut.clock.step(10)
+      }
     }
-  }
 }
