@@ -93,17 +93,59 @@ class AESTest extends AnyFlatSpec {
     //   }
     // }
 
-    // it should "test new implementation of SBox" in {
-    // simulate(new SBoxO) { dut =>
-    //     dut.io.stateIn.poke(0.U)
-    //     dut.io.stateOut.expect("h63".U)
-    //     dut.clock.step(10)
+    // it should "test Key Expansion" in {
+    //   simulate(new KeyExpansion) { dut =>
+    //   dut.clock.step(10)
+    //       }
+    // }
+
+    it should "test AES" in {
+      simulate(new AES) { dut =>
+      dut.clock.step(10)
+      }
+    }
+
+    // it should "test Mix Columns" in {
+    //   simulate(new MixColumns) { dut =>
+    //     dut.io.stateIn(0)(0).poke(89.U)
+    //     dut.io.stateIn(0)(1).poke(69.U)
+    //     dut.io.stateIn(0)(2).poke(76.U)
+    //     dut.io.stateIn(0)(3).poke(76.U)
+    //     dut.io.stateIn(1)(0).poke(79.U)
+    //     dut.io.stateIn(1)(1).poke(87.U)
+    //     dut.io.stateIn(1)(2).poke(32.U)
+    //     dut.io.stateIn(1)(3).poke(83.U)
+    //     dut.io.stateIn(2)(0).poke(85.U)
+    //     dut.io.stateIn(2)(1).poke(66.U)
+    //     dut.io.stateIn(2)(2).poke(77.U)
+    //     dut.io.stateIn(2)(3).poke(65.U)
+    //     dut.io.stateIn(3)(0).poke(82.U)
+    //     dut.io.stateIn(3)(1).poke(73.U)
+    //     dut.io.stateIn(3)(2).poke(78.U)
+    //     dut.io.stateIn(3)(3).poke(69.U)
+    //   dut.clock.step(10)
     //   }
     // }
 
-    it should "test Key Expansion" in {
-      simulate(new KeyExpansion) { dut =>
-      dut.clock.step(10)
-          }
-    }
+    // it should "test Key Expansion" in {
+    //   simulate(new KeyExpansion) { dut =>
+    //     dut.io.keyIn(0)(0).poke(89.U)
+    //     dut.io.keyIn(0)(1).poke(69.U)
+    //     dut.io.keyIn(0)(2).poke(76.U)
+    //     dut.io.keyIn(0)(3).poke(76.U)
+    //     dut.io.keyIn(1)(0).poke(79.U)
+    //     dut.io.keyIn(1)(1).poke(87.U)
+    //     dut.io.keyIn(1)(2).poke(32.U)
+    //     dut.io.keyIn(1)(3).poke(83.U)
+    //     dut.io.keyIn(2)(0).poke(85.U)
+    //     dut.io.keyIn(2)(1).poke(66.U)
+    //     dut.io.keyIn(2)(2).poke(77.U)
+    //     dut.io.keyIn(2)(3).poke(65.U)
+    //     dut.io.keyIn(3)(0).poke(82.U)
+    //     dut.io.keyIn(3)(1).poke(73.U)
+    //     dut.io.keyIn(3)(2).poke(78.U)
+    //     dut.io.keyIn(3)(3).poke(69.U)
+    //   dut.clock.step(10)
+    //   }
+    // }
 }
