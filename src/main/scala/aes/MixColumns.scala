@@ -31,7 +31,7 @@ class MixColumns extends Module{
         val result = Wire(Vec(4, UInt(8.W)))
         val m = List(List(2, 3, 1, 1), List(1, 2, 3, 1), List(1, 1, 2, 3), List(3, 1, 1, 2))
         for (i <- 0 until 4) {
-            result(i) := getMultiply(m(i)(0), col(0)) ^ getMultiply(m(i)(0), col(1)) ^ getMultiply(m(i)(0), col(2)) ^ getMultiply(m(i)(0), col(3))
+            result(i) := getMultiply(m(i)(0), col(0)) ^ getMultiply(m(i)(1), col(1)) ^ getMultiply(m(i)(2), col(2)) ^ getMultiply(m(i)(3), col(3))
         }
         result
     }
