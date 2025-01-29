@@ -20,22 +20,18 @@ class AES extends Module{
     val roundKeys = Wire(Vec(44*4, UInt(8.W)))
     val state = Reg(Vec(4, Vec(4, UInt(8.W))))
 
+    subBytes.io.stateIn := DontCare
+    shiftRows.io.stateIn := DontCare
+    mixColumns.io.stateIn := DontCare
+
     keyExpansion.io.keyIn := io.key
     roundKeys := keyExpansion.io.keyOut
 
-    addRound.io.stateIn := io.stateIn
-    for (i <- 0 until 4){
-        for (j <- 0 until 4){
-            addRound.io.roundKey(i)(j) := roundKeys(i*4+j)
-        }
-    }
-    state := addRound.io.stateOut
+    val counter = RegInit(0.U(4.W))
+    counter := Mux(counter === 11.U, 0.U, counter + 1.U)
 
-    for (i <- 1 until 10){
-        subBytes.io.stateIn := state
-        shiftRows.io.stateIn := subBytes.io.stateOut
-        mixColumns.io.stateIn := shiftRows.io.stateOut
-        addRound.io.stateIn := mixColumns.io.stateOut
+    when(counter === 0.U){
+        addRound.io.stateIn := io.stateIn
         for (i <- 0 until 4){
             for (j <- 0 until 4){
                 addRound.io.roundKey(i)(j) := roundKeys(i*4+j)
@@ -43,16 +39,30 @@ class AES extends Module{
         }
         state := addRound.io.stateOut
     }
-
-    subBytes.io.stateIn := state
-    shiftRows.io.stateIn := subBytes.io.stateOut
-    addRound.io.stateIn := shiftRows.io.stateOut
-    for (i <- 0 until 4){
-        for (j <- 0 until 4){
-            addRound.io.roundKey(i)(j) := roundKeys(i*4+j)
+    .elsewhen(1.U <= counter <= 9.U){
+        subBytes.io.stateIn := state
+        shiftRows.io.stateIn := subBytes.io.stateOut
+        mixColumns.io.stateIn := shiftRows.io.stateOut
+        addRound.io.stateIn := mixColumns.io.stateOut
+        for (i <- 0 until 4){
+            for (j <- 0 until 4){
+                addRound.io.roundKey(i)(j) := roundKeys(counter*16.U+i.U*4.U+j.U)
+            }
         }
+        state := addRound.io.stateOut
     }
-    state := addRound.io.stateOut
+    .otherwise{
+        subBytes.io.stateIn := state
+        shiftRows.io.stateIn := subBytes.io.stateOut
+        addRound.io.stateIn := shiftRows.io.stateOut
+        for (i <- 0 until 4){
+            for (j <- 0 until 4){
+                addRound.io.roundKey(i)(j) := roundKeys(10*16+i*4+j)
+            }
+        }
+        state := addRound.io.stateOut
+    }
+
 
     io.stateOut := state
 
