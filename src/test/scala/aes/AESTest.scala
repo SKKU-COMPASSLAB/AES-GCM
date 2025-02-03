@@ -43,109 +43,131 @@ import Simulator._
 class AESTest extends AnyFlatSpec {
   behavior of "AES"
 
-  // it should "test SBox" in {
-  //   simulate(new SBox) { dut =>
-  //     // dut.io.byteIn.poke(1.U)
-  //     dut.clock.step(10)
+  // it should "test Key Expansion" in {
+  //   simulate(new KeyExpansion){dut =>
+  //     val key = Seq(
+  //       Seq(0x2b.U, 0x28.U, 0xab.U, 0x09.U),
+  //       Seq(0x7e.U, 0xae.U, 0xf7.U, 0xcf.U),
+  //       Seq(0x15.U, 0xd2.U, 0x15.U, 0x4f.U),
+  //       Seq(0x16.U, 0xa6.U, 0x88.U, 0x3c.U)
+  //     )
+  //     for (i <- 0 until 4){
+  //       for (j <- 0 until 4){
+  //         dut.io.keyIn(i)(j).poke(key(i)(j))
+  //       }
+  //     }
+  //     dut.clock.step(50)
   //   }
   // }
 
-    // it should "test SubBytes" in {
-    //   simulate(new SubBytes) { dut =>
-    //     dut.io.stateIn(0)(1).poke(1.U)
-    //     // dut.io.stateIn(1).poke(2.U)
-    //     // dut.io.stateIn(2).poke(3.U)
-    //     // dut.io.stateIn(3).poke(4.U)
-    //     // dut.io.stateIn(4).poke(5.U)
-    //     // dut.io.stateIn(5).poke(6.U)
-    //     // dut.io.stateIn(6).poke(7.U)
-    //     // dut.io.stateIn(7).poke(8.U)
-    //     // dut.io.stateIn(8).poke(9.U)
-    //     // dut.io.stateIn(9).poke(10.U)
-    //     // dut.io.stateIn(10).poke(11.U)
-    //     // dut.io.stateIn(11).poke(12.U)
-    //     // dut.io.stateIn(12).poke(13.U)
-    //     // dut.io.stateIn(13).poke(14.U)
-    //     // dut.io.stateIn(14).poke(15.U)
-    //     // dut.io.stateIn(15).poke(16.U)
-    //     dut.io.stateOut(0)(1).expect(0x63.U)
-    //     dut.clock.step(10)
-    //   }
-    // }
-
-    // it should "test SubBytes" in {
-    //   simulate(new SubBytes) { dut =>
-    //   dut.clock.step(10)
-    //       }
-    // }
-
-    // it should "test Mix Columns" in {
-    // simulate(new MixColumns) { dut =>
-    //     // dut.io.byteIn.poke(1.U)
-    //     dut.clock.step(10)
-    //   }
-    // }
-
-    // it should "test Key Expansion" in {
-    // simulate(new KeyExpansion) { dut =>
-    //     // dut.io.byteIn.poke(1.U)
-    //     dut.clock.step(10)
-    //   }
-    // }
-
-    // it should "test Key Expansion" in {
-    //   simulate(new KeyExpansion) { dut =>
-    //   dut.clock.step(10)
-    //       }
-    // }
-
     it should "test AES" in {
       simulate(new AES) { dut =>
-      dut.clock.step(10)
+        val key = Seq(
+          Seq(0x2b.U, 0x7e.U, 0x15.U, 0x16.U),
+          Seq(0x28.U, 0xae.U, 0xd2.U, 0xa6.U),
+          Seq(0xab.U, 0xf7.U, 0x15.U, 0x88.U),
+          Seq(0x09.U, 0xcf.U, 0x4f.U, 0x3c.U)
+        )
+        val plaintext = Seq(
+          Seq(0x6b.U, 0xc1.U, 0xbe.U, 0xe2.U),
+          Seq(0x2e.U, 0x40.U, 0x9f.U, 0x96.U),
+          Seq(0xe9.U, 0x3d.U, 0x7e.U, 0x11.U),
+          Seq(0x73.U, 0x93.U, 0x17.U, 0x2a.U)
+        )
+        val expectedCiphertext = Seq(
+          Seq(0x18.U, 0xfa.U, 0x20.U, 0x95.U),
+          Seq(0x96.U, 0xc3.U, 0xb0.U, 0xa6.U),
+          Seq(0x53.U, 0x57.U, 0x31.U, 0x89.U),
+          Seq(0x86.U, 0x3f.U, 0x28.U, 0xdc.U)
+        )
+        for (i <- 0 until 4) {
+          for (j <- 0 until 4) {
+            dut.io.key(i)(j).poke(key(i)(j))
+          }
+        }
+
+        // Apply the plaintext
+        for (i <- 0 until 4) {
+          for (j <- 0 until 4) {
+            dut.io.stateIn(i)(j).poke(plaintext(i)(j))
+          }
+        }
+        dut.clock.step(11)
+        for (i <- 0 until 4) {
+          for (j <- 0 until 4) {
+            dut.io.stateOut(i)(j).expect(expectedCiphertext(i)(j))
+          }
+        }
       }
     }
 
     // it should "test Mix Columns" in {
     //   simulate(new MixColumns) { dut =>
-    //     dut.io.stateIn(0)(0).poke(89.U)
-    //     dut.io.stateIn(0)(1).poke(69.U)
-    //     dut.io.stateIn(0)(2).poke(76.U)
-    //     dut.io.stateIn(0)(3).poke(76.U)
-    //     dut.io.stateIn(1)(0).poke(79.U)
-    //     dut.io.stateIn(1)(1).poke(87.U)
-    //     dut.io.stateIn(1)(2).poke(32.U)
-    //     dut.io.stateIn(1)(3).poke(83.U)
-    //     dut.io.stateIn(2)(0).poke(85.U)
-    //     dut.io.stateIn(2)(1).poke(66.U)
-    //     dut.io.stateIn(2)(2).poke(77.U)
-    //     dut.io.stateIn(2)(3).poke(65.U)
-    //     dut.io.stateIn(3)(0).poke(82.U)
-    //     dut.io.stateIn(3)(1).poke(73.U)
-    //     dut.io.stateIn(3)(2).poke(78.U)
-    //     dut.io.stateIn(3)(3).poke(69.U)
-    //   dut.clock.step(10)
+    //     val key = Seq(
+    //       Seq(0xd4.U, 0xe0.U, 0xb8.U, 0x1e.U),
+    //       Seq(0xbf.U, 0xb4.U, 0x41.U, 0x27.U),
+    //       Seq(0x5d.U, 0x52.U, 0x11.U, 0x98.U),
+    //       Seq(0x30.U, 0xae.U, 0xf1.U, 0xe5.U)
+    //     )
+    //     for (i <- 0 until 4) {
+    //       for (j <- 0 until 4) {
+    //         dut.io.stateIn(i)(j).poke(key(i)(j))
+    //       }
+    //     }
+    //     dut.clock.step(50)
     //   }
     // }
 
     // it should "test Key Expansion" in {
     //   simulate(new KeyExpansion) { dut =>
-    //     dut.io.keyIn(0)(0).poke(89.U)
-    //     dut.io.keyIn(0)(1).poke(69.U)
-    //     dut.io.keyIn(0)(2).poke(76.U)
-    //     dut.io.keyIn(0)(3).poke(76.U)
-    //     dut.io.keyIn(1)(0).poke(79.U)
-    //     dut.io.keyIn(1)(1).poke(87.U)
-    //     dut.io.keyIn(1)(2).poke(32.U)
-    //     dut.io.keyIn(1)(3).poke(83.U)
-    //     dut.io.keyIn(2)(0).poke(85.U)
-    //     dut.io.keyIn(2)(1).poke(66.U)
-    //     dut.io.keyIn(2)(2).poke(77.U)
-    //     dut.io.keyIn(2)(3).poke(65.U)
-    //     dut.io.keyIn(3)(0).poke(82.U)
-    //     dut.io.keyIn(3)(1).poke(73.U)
-    //     dut.io.keyIn(3)(2).poke(78.U)
-    //     dut.io.keyIn(3)(3).poke(69.U)
-    //   dut.clock.step(10)
+    //     val key = Seq(
+    //       Seq(0x2b.U, 0x7e.U, 0x15.U, 0x16.U),
+    //       Seq(0x28.U, 0xae.U, 0xd2.U, 0xa6.U),
+    //       Seq(0xab.U, 0xf7.U, 0x15.U, 0x88.U),
+    //       Seq(0x09.U, 0xcf.U, 0x4f.U, 0x3c.U)
+    //     )
+    //     for (i <- 0 until 4) {
+    //       for (j <- 0 until 4) {
+    //         dut.io.keyIn(i)(j).poke(key(i)(j))
+    //       }
+    //     }
+    //     dut.clock.step(50)
     //   }
     // }
+
+  //   it should "test Shift Rows" in {
+  //     simulate(new ShiftRow) { dut =>
+  //     val inputState = Seq(
+  //       Seq(0x63.U, 0x09.U, 0xcd.U, 0xba.U),
+  //       Seq(0x53.U, 0xd0.U, 0x51.U, 0x60.U),
+  //       Seq(0xe0.U, 0x8c.U, 0x7c.U, 0x9c.U),
+  //       Seq(0x20.U, 0x0a.U, 0x93.U, 0x7d.U)
+  //     )
+
+  //     // Expected output state after ShiftRows
+  //     val expectedOutputState = Seq(
+  //       Seq(0x63.U, 0x09.U, 0xcd.U, 0xba.U), // No shift
+  //       Seq(0xd0.U, 0x51.U, 0x60.U, 0x53.U), // Left shift by 1
+  //       Seq(0x7c.U, 0x9c.U, 0xe0.U, 0x8c.U), // Left shift by 2
+  //       Seq(0x7d.U, 0x20.U, 0x0a.U, 0x93.U)  // Left shift by 3
+  //     )
+
+  //     // Apply the input state
+  //     for (i <- 0 until 4) {
+  //       for (j <- 0 until 4) {
+  //         dut.io.stateIn(i)(j).poke(inputState(i)(j))
+  //       }
+  //     }
+
+  //     // Step the clock to process the input
+  //     dut.clock.step(1)
+
+  //     // Check the output state
+  //     for (i <- 0 until 4) {
+  //       for (j <- 0 until 4) {
+  //         dut.io.stateOut(i)(j).expect(expectedOutputState(i)(j))
+  //       }
+  //     }
+  //   }
+  // }
 }
