@@ -3,12 +3,15 @@ package aes
 import chisel3._
 import chisel3.util._
 
+class AES_IO extends Bundle{
+    val stateIn = Input(Vec(4, Vec(4, UInt(8.W))))
+    val stateOut = Output(Vec(4, Vec(4, UInt(8.W))))
+    val key = Input(Vec(4, Vec(4, UInt(8.W))))
+    val valid = Output(Bool())
+}
+
 class AES extends Module{
-    val io = IO(new Bundle{
-        val stateIn = Input(Vec(4, Vec(4, UInt(8.W))))
-        val stateOut = Output(Vec(4, Vec(4, UInt(8.W))))
-        val key = Input(Vec(4, Vec(4, UInt(8.W))))
-    })
+    val io = IO(new AES_IO)
 
     val keyExpansion = Module(new KeyExpansion)
 
@@ -30,23 +33,25 @@ class AES extends Module{
     val counter = RegInit(0.U(4.W))
     counter := Mux(counter === 11.U, 0.U, counter + 1.U)
 
+    io.valid := counter === 11.U
+
     when(counter === 0.U){
         addRound.io.stateIn := io.stateIn
         for (i <- 0 until 4){
             for (j <- 0 until 4){
-                addRound.io.roundKey(i)(j) := roundKeys(i*4+j)
+                addRound.io.roundKey(j)(i) := roundKeys(i*4+j)
             }
         }
         state := addRound.io.stateOut
     }
-    .elsewhen(1.U <= counter <= 9.U){
+    .elsewhen(counter >= 1.U && counter <= 9.U){
         subBytes.io.stateIn := state
         shiftRows.io.stateIn := subBytes.io.stateOut
         mixColumns.io.stateIn := shiftRows.io.stateOut
         addRound.io.stateIn := mixColumns.io.stateOut
         for (i <- 0 until 4){
             for (j <- 0 until 4){
-                addRound.io.roundKey(i)(j) := roundKeys(counter*16.U+i.U*4.U+j.U)
+                addRound.io.roundKey(j)(i) := roundKeys(counter*16.U+i.U*4.U+j.U)
             }
         }
         state := addRound.io.stateOut
@@ -57,13 +62,12 @@ class AES extends Module{
         addRound.io.stateIn := shiftRows.io.stateOut
         for (i <- 0 until 4){
             for (j <- 0 until 4){
-                addRound.io.roundKey(i)(j) := roundKeys(10*16+i*4+j)
+                addRound.io.roundKey(j)(i) := roundKeys(10*16+i*4+j)
             }
         }
         state := addRound.io.stateOut
     }
 
-
-    io.stateOut := state
+    io.stateOut := Mux(counter === 11.U, state, DontCare)
 
 }

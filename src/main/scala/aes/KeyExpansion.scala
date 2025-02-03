@@ -34,7 +34,7 @@ class KeyExpansion extends Module{
 
     for (i <- 0 until 4){
         for (j <- 0 until 4){
-            roundKeys(i*4+j) := io.keyIn(i)(j)
+            roundKeys(i*4+j) := io.keyIn(j)(i)
         }
     }
 

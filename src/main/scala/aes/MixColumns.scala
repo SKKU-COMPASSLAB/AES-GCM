@@ -36,15 +36,6 @@ class MixColumns extends Module{
         result
     }
 
-    // def mixColumn(col: Vec[UInt]): Vec[UInt] = {
-    //     val result = Wire(Vec(4, UInt(8.W)))
-    //     result(0) := gfMultiplyBy2(col(0)) ^ gfMultiplyBy3(col(1)) ^ col(2) ^ col(3)
-    //     result(1) := col(0) ^ gfMultiplyBy2(col(1)) ^ gfMultiplyBy3(col(2)) ^ col(3)
-    //     result(2) := col(0) ^ col(1) ^ gfMultiplyBy2(col(2)) ^ gfMultiplyBy3(col(3))
-    //     result(3) := gfMultiplyBy3(col(0)) ^ col(1) ^ col(2) ^ gfMultiplyBy2(col(3))
-    //     result
-    // }
-
     for (col <- 0 until 4){
         val inputCol = Wire(Vec(4, UInt(8.W)))
         for (row <- 0 until 4){
