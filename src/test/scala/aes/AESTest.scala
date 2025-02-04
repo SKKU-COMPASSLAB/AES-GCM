@@ -83,21 +83,27 @@ class AESTest extends AnyFlatSpec {
         for (i <- 0 until 4) {
           for (j <- 0 until 4) {
             dut.io.key(i)(j).poke(key(i)(j))
+            dut.io.stateIn(i)(j).poke(plaintext(i)(j))
           }
         }
 
         // Apply the plaintext
-        for (i <- 0 until 4) {
-          for (j <- 0 until 4) {
-            dut.io.stateIn(i)(j).poke(plaintext(i)(j))
-          }
-        }
+        // for (i <- 0 until 4) {
+        //   for (j <- 0 until 4) {
+        //     dut.io.stateIn(i)(j).poke(plaintext(i)(j))
+        //   }
+        // }
+        dut.io.start.poke(true.B)
         dut.clock.step(11)
         for (i <- 0 until 4) {
           for (j <- 0 until 4) {
             dut.io.stateOut(i)(j).expect(expectedCiphertext(i)(j))
           }
         }
+        dut.io.valid.expect(true.B)
+        dut.io.start.poke(false.B)
+        dut.clock.step(10)
+        dut.io.valid.expect(false.B)
       }
     }
 
