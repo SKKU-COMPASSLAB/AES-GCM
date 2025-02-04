@@ -97,7 +97,7 @@ class GCM extends Module{
             when(ghash.io.valid){
                 for (i <- 0 until 4){
                     for (j <- 0 until 4){
-                        io.dataOut(j)(i) := ghash.io.ghash(i*4+j)
+                        io.dataOut(j)(i) := ghash.io.ghash((15-(i * 4 + j))*8+7, (15-(i*4+j))*8)
                     }
                 }
                 state := sIDLE
