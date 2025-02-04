@@ -3,12 +3,15 @@ package gcm
 import chisel3._
 import chisel3.util._
 
+class GFMult_IO extends Bundle{
+    val a = Input(UInt(128.W))
+    val b = Input(UInt(128.W))
+    val out = Output(UInt(128.W))
+    val valid = Output(Bool())
+}
+
 class GFMult extends Module{
-    val io = IO(new Bundle{
-        val a = Input(UInt(128.W))
-        val b = Input(UInt(128.W))
-        val out = Output(UInt(128.W))
-    })
+    val io = IO(new GFMult_IO)
 
     val a = WireInit(Reverse(io.a))
     val b = WireInit(Reverse(io.b))
@@ -23,6 +26,7 @@ class GFMult extends Module{
     val state = RegInit(sIDLE)
 
     io.out := DontCare
+    io.valid := Mux(state === sFINISH, true.B, false.B)
 
     switch(state){
         is(sIDLE){
@@ -41,7 +45,6 @@ class GFMult extends Module{
             .otherwise{
                 v := v >> 1
             }
-
             counter := counter + 1.U
             when(counter.andR){
                 state := sFINISH
