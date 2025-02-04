@@ -6,6 +6,8 @@ import chisel3.util._
 class GFMult_IO extends Bundle{
     val a = Input(UInt(128.W))
     val b = Input(UInt(128.W))
+    val start = Input(Bool())
+    
     val out = Output(UInt(128.W))
     val valid = Output(Bool())
 }
@@ -33,7 +35,7 @@ class GFMult extends Module{
             z := 0.U
             v := b
             counter := 0.U
-            state := sCOMPUTE
+            state := Mux(io.start, sCOMPUTE, sIDLE)
         }
         is(sCOMPUTE){
             when(a(counter)){

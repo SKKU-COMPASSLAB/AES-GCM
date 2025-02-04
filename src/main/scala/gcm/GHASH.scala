@@ -8,7 +8,10 @@ class GHASH extends Module{
         val xIn = Input(UInt(128.W))
         val cypherIn = Input(UInt(128.W))
         val hashKey = Input(UInt(128.W))
+        val start = Input(Bool())
+        
         val ghash = Output(UInt(128.W))
+        val valid = Output(Bool())
     })
 
     val gfmult = Module(new GFMult)
@@ -17,6 +20,8 @@ class GHASH extends Module{
 
     gfmult.io.a := xor_res
     gfmult.io.b := io.hashKey
+    gfmult.io.start := io.start
 
+    io.valid := gfmult.io.valid
     io.ghash := gfmult.io.out
 }

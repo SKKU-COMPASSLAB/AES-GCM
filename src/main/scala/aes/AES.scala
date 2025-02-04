@@ -8,6 +8,7 @@ class AES_IO extends Bundle{
     val stateOut = Output(Vec(4, Vec(4, UInt(8.W))))
     val key = Input(Vec(4, Vec(4, UInt(8.W))))
     val valid = Output(Bool())
+    val start = Input(Bool())
 }
 
 class AES extends Module{
@@ -31,7 +32,7 @@ class AES extends Module{
     roundKeys := keyExpansion.io.keyOut
 
     val counter = RegInit(0.U(4.W))
-    counter := Mux(counter === 11.U, 0.U, counter + 1.U)
+    counter := Mux(counter === 11.U, 0.U, Mux(io.start, counter + 1.U, 0.U))
 
     io.valid := counter === 11.U
 
