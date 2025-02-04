@@ -16,7 +16,7 @@ class GHASH extends Module{
     val xor_res = io.xIn ^ io.cypherIn
 
     gfmult.io.a := xor_res
-    gfmult.io.b := hashKey
+    gfmult.io.b := io.hashKey
 
     io.ghash := gfmult.io.out
 }
