@@ -40,7 +40,7 @@ object Simulator extends PeekPokeAPI {
 
 import Simulator._
 
-class GCMTest extends AnyFlatSpec {
+class AES_GCMTest extends AnyFlatSpec {
   behavior of "GCM"
 
   // it should "test GHASH" in {
@@ -198,41 +198,218 @@ class GCMTest extends AnyFlatSpec {
   //   }
   // }
 
-  it should "test GCM Mode 0" in {
-    simulate(new GCM) { dut =>
-        val key = Seq(
-          Seq(0x2b.U, 0x7e.U, 0x15.U, 0x16.U),
-          Seq(0x28.U, 0xae.U, 0xd2.U, 0xa6.U),
-          Seq(0xab.U, 0xf7.U, 0x15.U, 0x88.U),
-          Seq(0x09.U, 0xcf.U, 0x4f.U, 0x3c.U)
-        )
-        val plaintext = Seq(
-          Seq(0x6b.U, 0xc1.U, 0xbe.U, 0xe2.U),
-          Seq(0x2e.U, 0x40.U, 0x9f.U, 0x96.U),
-          Seq(0xe9.U, 0x3d.U, 0x7e.U, 0x11.U),
-          Seq(0x73.U, 0x93.U, 0x17.U, 0x2a.U)
-        )
-        val expectedCiphertext = Seq(
-          Seq(0x18.U, 0xfa.U, 0x20.U, 0x95.U),
-          Seq(0x96.U, 0xc3.U, 0xb0.U, 0xa6.U),
-          Seq(0x53.U, 0x57.U, 0x31.U, 0x89.U),
-          Seq(0x86.U, 0x3f.U, 0x28.U, 0xdc.U)
-        )
+  // it should "test GCM Mode 3" in {
+  //   simulate(new AES_GCM) { dut =>
+  //       val key = Seq(
+  //         Seq(0x2b.U, 0x7e.U, 0x15.U, 0x16.U),
+  //         Seq(0x28.U, 0xae.U, 0xd2.U, 0xa6.U),
+  //         Seq(0xab.U, 0xf7.U, 0x15.U, 0x88.U),
+  //         Seq(0x09.U, 0xcf.U, 0x4f.U, 0x3c.U)
+  //       )
+  //       val plaintext = Seq(
+  //         Seq(0x6b.U, 0xc1.U, 0xbe.U, 0xe2.U),
+  //         Seq(0x2e.U, 0x40.U, 0x9f.U, 0x96.U),
+  //         Seq(0xe9.U, 0x3d.U, 0x7e.U, 0x11.U),
+  //         Seq(0x73.U, 0x93.U, 0x17.U, 0x2a.U)
+  //       )
+  //       val expectedCiphertext = Seq(
+  //         Seq(0x18.U, 0xfa.U, 0x20.U, 0x95.U),
+  //         Seq(0x96.U, 0xc3.U, 0xb0.U, 0xa6.U),
+  //         Seq(0x53.U, 0x57.U, 0x31.U, 0x89.U),
+  //         Seq(0x86.U, 0x3f.U, 0x28.U, 0xdc.U)
+  //       )
+
+  //       for (i <- 0 until 4){
+  //           for (j <- 0 until 4){
+  //               dut.io.key(i)(j).poke(key(i)(j))
+  //               dut.io.dataIn1(i)(j).poke(plaintext(i)(j))
+  //           }
+  //       }
+
+  //       dut.io.start.poke(true.B)
+  //       dut.io.mode.poke(1.U)
+
+  //       dut.clock.step(11+1)
+  //       for (i <- 0 until 4){
+  //           for (j <- 0 until 4){
+  //               dut.io.dataOut(i)(j).expect(expectedCiphertext(i)(j))
+  //           }
+  //       }
+  //       dut.io.valid.expect(true.B)
+  //       dut.io.start.poke(false.B)
+  //       dut.clock.step(100)
+
+  //     }
+  //   }
+
+    // it should "test GCM Mode 1" in {
+    //   simulate(new AES_GCM) { dut => 
+    //     val in_1 = Seq(
+    //                    Seq("h80".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W)),
+    //                    Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W)),
+    //                    Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W)),
+    //                    Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W))
+    //                    )
+    //     val in_2 = Seq(
+    //                    Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W)),
+    //                    Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W)),
+    //                    Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W)),
+    //                    Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h01".U(8.W))
+    //                    )
+
+    //     for (i <- 0 until 4){
+    //       for (j <- 0 until 4){
+    //           dut.io.dataIn1(i)(j).poke(in_1(i)(j))
+    //           dut.io.dataIn3(i)(j).poke(in_2(i)(j))
+    //       }
+    //     }
+
+    //     dut.io.start.poke(true.B)
+    //     dut.io.mode.poke(2.U)
+
+    //     dut.clock.step(128+2)
+    //     for (i <- 0 until 4){
+    //         for (j <- 0 until 4){
+    //             dut.io.dataOut(i)(j).expect(in_2(i)(j))
+    //         }
+    //     }
+    //     dut.io.valid.expect(true.B)
+    //     dut.io.start.poke(false.B)
+    //     dut.clock.step(100)
+    //   }
+    // }
+
+    // it should "test GCM Mode 1" in {
+    //   simulate(new AES_GCM) { dut => 
+    //     val hashSubKey = Seq(
+    //                     Seq("h66".U(8.W), "hef".U(8.W), "h88".U(8.W), "hca".U(8.W)),
+    //                     Seq("he9".U(8.W), "h8a".U(8.W), "h4c".U(8.W), "h34".U(8.W)),
+    //                     Seq("h4b".U(8.W), "h2c".U(8.W), "hfa".U(8.W), "h2b".U(8.W)),
+    //                     Seq("hd4".U(8.W), "h3b".U(8.W), "h59".U(8.W), "h2e".U(8.W)))
+
+    //     val E_Y0 = Seq(
+    //                     Seq("h58".U(8.W), "hfa".U(8.W), "h36".U(8.W), "ha4".U(8.W)),
+    //                     Seq("he2".U(8.W), "h7e".U(8.W), "h7f".U(8.W), "he7".U(8.W)),
+    //                     Seq("hfc".U(8.W), "h30".U(8.W), "h1d".U(8.W), "h45".U(8.W)),
+    //                     Seq("hce".U(8.W), "h61".U(8.W), "h57".U(8.W), "h5a".U(8.W)) 
+    //                     )
+
+    //     val ghash = Seq(
+    //                     Seq("hA0".U(8.W), "h63".U(8.W), "h9E".U(8.W), "h60".U(8.W)),
+    //                     Seq("hBB".U(8.W), "hAF".U(8.W), "h35".U(8.W), "hA4".U(8.W)),
+    //                     Seq("h28".U(8.W), "hDB".U(8.W), "hFD".U(8.W), "h2B".U(8.W)),
+    //                     Seq("h9B".U(8.W), "hD3".U(8.W), "h60".U(8.W), "hC3".U(8.W)) 
+    //                   )
+
+    //     for (i <- 0 until 4){
+    //       for (j <- 0 until 4){
+    //           dut.io.dataIn1(i)(j).poke(0.U(8.W))
+    //           dut.io.dataIn2(i)(j).poke(E_Y0(i)(j))
+    //           dut.io.key(i)(j).poke(hashSubKey(i)(j))
+    //       }
+    //     }
+
+    //     dut.io.start.poke(true.B)
+    //     dut.io.mode.poke(2.U)
+
+    //     while (dut.io.valid.peek().litToBoolean == false){
+    //       dut.clock.step(1)
+    //     }
+    //     // dut.clock.step(128+1)
+    //     for (i <- 0 until 4){
+    //         for (j <- 0 until 4){
+    //             dut.io.dataOut(i)(j).expect(ghash(i)(j))
+    //         }
+    //     }
+    //     dut.io.valid.expect(true.B)
+    //     dut.io.start.poke(false.B)
+    //     dut.clock.step(100)
+    //   }
+    // }
+
+    // it should "test GCM Mode 1" in {
+    //   simulate(new AES_GCM) { dut => 
+    //     val hashSubKey = Seq(
+    //                     Seq("h66".U(8.W), "hef".U(8.W), "h88".U(8.W), "hca".U(8.W)),
+    //                     Seq("he9".U(8.W), "h8a".U(8.W), "h4c".U(8.W), "h34".U(8.W)),
+    //                     Seq("h4b".U(8.W), "h2c".U(8.W), "hfa".U(8.W), "h2b".U(8.W)),
+    //                     Seq("hd4".U(8.W), "h3b".U(8.W), "h59".U(8.W), "h2e".U(8.W)))
+
+    //     val E_Y0 = Seq(
+    //                     Seq("h58".U(8.W), "hfa".U(8.W), "h36".U(8.W), "ha4".U(8.W)),
+    //                     Seq("he2".U(8.W), "h7e".U(8.W), "h7f".U(8.W), "he7".U(8.W)),
+    //                     Seq("hfc".U(8.W), "h30".U(8.W), "h1d".U(8.W), "h45".U(8.W)),
+    //                     Seq("hce".U(8.W), "h61".U(8.W), "h57".U(8.W), "h5a".U(8.W)) 
+    //                     )
+
+    //     val xIn = Seq(
+    //                     Seq("hA0".U(8.W), "h63".U(8.W), "h9E".U(8.W), "h60".U(8.W)),
+    //                     Seq("hBB".U(8.W), "hAF".U(8.W), "h35".U(8.W), "hA4".U(8.W)),
+    //                     Seq("h28".U(8.W), "hDB".U(8.W), "hFD".U(8.W), "h2B".U(8.W)),
+    //                     Seq("h9B".U(8.W), "hD3".U(8.W), "h60".U(8.W), "hC3".U(8.W)) 
+    //                   )
+
+    //     for (i <- 0 until 4){
+    //       for (j <- 0 until 4){
+    //           dut.io.dataIn1(i)(j).poke(0.U(8.W))
+    //           dut.io.dataIn2(i)(j).poke(0.U(8.W))
+    //           dut.io.key(i)(j).poke(hashSubKey(i)(j))
+    //       }
+    //     }
+
+    //     dut.io.start.poke(true.B)
+    //     dut.io.mode.poke(2.U)
+
+    //     while (dut.io.valid.peek().litToBoolean == false){
+    //       dut.clock.step(1)
+    //     }
+    //     // dut.clock.step(128+1)
+    //     for (i <- 0 until 4){
+    //         for (j <- 0 until 4){
+    //             dut.io.dataOut(i)(j).expect(hashSubKey(i)(j))
+    //         }
+    //     }
+    //     dut.io.valid.expect(true.B)
+    //     dut.io.start.poke(false.B)
+    //     dut.clock.step(100)
+    //   }
+    // }
+// --------------------------------------------
+  it should "test GCM Mode 3" in {
+    simulate(new AES_GCM) { dut =>
+        val tag = Seq(
+                        Seq("h58".U(8.W), "hfa".U(8.W), "h36".U(8.W), "ha4".U(8.W)),
+                        Seq("he2".U(8.W), "h7e".U(8.W), "h7f".U(8.W), "he7".U(8.W)),
+                        Seq("hfc".U(8.W), "h30".U(8.W), "h1d".U(8.W), "h45".U(8.W)),
+                        Seq("hce".U(8.W), "h61".U(8.W), "h57".U(8.W), "h5a".U(8.W)) 
+                        )
+
+        val iv_ctr = Seq(
+                        Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W)),
+                        Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W)),
+                        Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W)),
+                        Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h01".U(8.W))
+                        )
 
         for (i <- 0 until 4){
             for (j <- 0 until 4){
-                dut.io.key(i)(j).poke(key(i)(j))
-                dut.io.dataIn1(i)(j).poke(plaintext(i)(j))
+                dut.io.key(i)(j).poke(0.U(8.W))
+                dut.io.dataIn1(i)(j).poke(iv_ctr(i)(j))
+                dut.io.dataIn2(i)(j).poke(0.U(8.W))
             }
         }
 
         dut.io.start.poke(true.B)
-        dut.io.mode.poke(2.U)
+        dut.io.mode.poke(1.U)
 
-        dut.clock.step(11+1)
+        // dut.clock.step(11+1)
+        while (dut.io.valid.peek().litToBoolean == false){
+          dut.clock.step(1)
+        }
+
         for (i <- 0 until 4){
             for (j <- 0 until 4){
-                dut.io.dataOut(i)(j).expect(expectedCiphertext(i)(j))
+                dut.io.dataOut(i)(j).expect(tag(i)(j))
             }
         }
         dut.io.valid.expect(true.B)
@@ -242,36 +419,62 @@ class GCMTest extends AnyFlatSpec {
       }
     }
 
-    it should "test GCM Mode 2" in {
-      simulate(new GCM) { dut => 
-        val in_1 = Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W),
-                        "h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W),
-                        "h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W),
-                        "h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W))
-        val in_2 = Seq("h80".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W),
-                        "h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W),
-                        "h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W),
-                        "h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h01".U(8.W))
+    // it should "test GCM Mode 2" in {
+    //   simulate(new AES_GCM) { dut => 
+    //     val hashSubKey = Seq(
+    //                     Seq("h66".U(8.W), "hef".U(8.W), "h88".U(8.W), "hca".U(8.W)),
+    //                     Seq("he9".U(8.W), "h8a".U(8.W), "h4c".U(8.W), "h34".U(8.W)),
+    //                     Seq("h4b".U(8.W), "h2c".U(8.W), "hfa".U(8.W), "h2b".U(8.W)),
+    //                     Seq("hd4".U(8.W), "h3b".U(8.W), "h59".U(8.W), "h2e".U(8.W)))
+    //     val iv_ctr = Seq(
+    //                     Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W)),
+    //                     Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W)),
+    //                     Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h00".U(8.W)),
+    //                     Seq("h00".U(8.W), "h00".U(8.W), "h00".U(8.W), "h01".U(8.W))
+    //                     )
 
-        for (i <- 0 until 4){
-          for (j <- 0 until 4){
-              dut.io.dataIn1(i)(j).poke(in_1(i)(j))
-              dut.io.dataIn3(i)(j).poke(in_2(i)(j))
-          }
-        }
+    //     for (i <- 0 until 4){
+    //       for (j <- 0 until 4){
+    //           dut.io.dataIn1(i)(j).poke(iv_ctr(i)(j))
+    //           dut.io.dataIn2(i)(j).poke(0.U(8.W))
+    //           dut.io.key(i)(j).poke("h00".U(8.W))
+    //           // dut.io.dataIn3(i)(j).poke(hashSubKey(i)(j))
+    //           // dut.io.dataIn4(i)(j).poke(0.U(8.W))
+    //       }
+    //     }
 
-        dut.io.start.poke(true.B)
-        dut.io.mode.poke(0.U)
+    //     dut.io.start.poke(true.B)
+    //     dut.io.mode.poke(1.U)
 
-        dut.clock.step(128+2)
-        for (i <- 0 until 4){
-            for (j <- 0 until 4){
-                dut.io.dataOut(i)(j).expect(in_2(i)(j))
-            }
-        }
-        dut.io.valid.expect(true.B)
-        dut.io.start.poke(false.B)
-        dut.clock.step(100)
-      }
-    }
+    //     dut.clock.step(11+1)
+
+    //     dut.io.start.poke(false.B)
+    //     dut.clock.step(1)
+    //     dut.io.mode.poke(0.U)
+    //     // dut.clock.step(1)
+
+    //     // for (i <- 0 until 4){
+    //     //     for (j <- 0 until 4){
+    //     //         println(dut.io.dataOut(j)(i).peek().litValue.toString(16))
+    //     //     }
+    //     // }
+
+    //     for (i <- 0 until 4){
+    //       for (j <- 0 until 4){
+    //           dut.io.dataIn1(i)(j).poke(0.U(8.W))
+    //           dut.io.dataIn2(i)(j).poke(dut.io.dataOut(i)(j).peek())
+    //           dut.io.key(i)(j).poke(hashSubKey(i)(j))
+    //       }
+    //     }
+
+    //     dut.io.start.poke(true.B)
+    //     dut.io.mode.poke(2.U)
+
+    //     dut.clock.step(128+2)
+
+    //     dut.io.start.poke(false.B)
+    //     dut.io.mode.poke(0.U)
+    //     dut.clock.step(100)
+    //   }
+    // }
 }
